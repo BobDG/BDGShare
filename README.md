@@ -1,9 +1,14 @@
 BDGShare
 ========
 
+## Installation using Cocoapods
+```
+pod 'BDGShare'
+```
+
 Share using built-in facebook, twitter, whatsapp, email, text message, activitycontroller, documentinteractioncontroller, all with 1 line and great completion blocks!
 
-# Usage
+## Usage
 
 **Facebook**
 
@@ -43,14 +48,14 @@ Share using built-in facebook, twitter, whatsapp, email, text message, activityc
         
 }];
 
-## Additional options
+### Additional options
 
 @property: presentingViewController. If not set, it uses the [UIApplication sharedApplication] keyWindow's rootViewController
 
 @property: excludedActivities. You can use this property to define activities the activityController should exclude. By default some rarely used activities are excluded.
 
 
-## Sharing results
+### Sharing results
 
 The completion blocks return a sharingresult which is always one of the following:
 

@@ -1,0 +1,6 @@
+/* Localized versions of Info.plist keys */
+
+"OK"                        =           "OK";
+"BGSSAlertSMSFail"          =           "Creating text message failed, is this device capable of sending text messages?";
+"BGSSAlertEmailFail"        =           "Creating e-mail failed, are there any e-mail accounts configured on this device?";
+

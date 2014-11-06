@@ -12,41 +12,41 @@ pod 'BDGShare'
 
 **Facebook**
 ```
-[[BDGShare sharedBDGShare] shareFacebook:@"text" urlStr:@"url string" image:nil completion:^(SharingResult sharingResult) {        
+[BDGSharing shareFacebook:@"text" urlStr:@"url string" image:nil completion:^(SharingResult sharingResult) {        
 }];
 ```
 
 **Twitter**
 ```
-[[BDGShare sharedBDGShare] shareTwitter:@"text" urlStr:@"url string" image:nil completion:^(SharingResult sharingResult) {        
+[BDGSharing shareTwitter:@"text" urlStr:@"url string" image:nil completion:^(SharingResult sharingResult) {        
 }];
 ```
 
 **Whatsapp**
 ```
-[[BDGShare sharedBDGShare] shareWhatsapp:@"Text message" urlStr:@"Optional url string"];
+[BDGSharing shareWhatsapp:@"Text message" urlStr:@"Optional url string"];
 ```
 
 **Email**
 ```
-[[BDGShare sharedBDGShare] shareEmail:@"Subject" mailBody:@"Body" recipients:nil isHTML:FALSE completion:^(SharingResult sharingResult) {        
+[BDGSharing shareEmail:@"Subject" mailBody:@"Body" recipients:nil isHTML:FALSE completion:^(SharingResult sharingResult) {        
 }];
 ```
 
 **Text message/SMS**
 ```
-[[BDGShare sharedBDGShare] shareSMS:@"Text message" recipient:nil completion:^(SharingResult sharingResult) {        
+[BDGSharing shareSMS:@"Text message" recipient:nil completion:^(SharingResult sharingResult) {        
 }];
 ```
 
-**Activity Controller (including optional whatsapp as an activity)**
+**Activity Controller (including optional whatsapp as an activity, also just updated to support iOS8 iPad new presentation popover)**
 ```
-[[BDGShare sharedBDGShare] shareUsingActivityController:@"Text" urlStr:@"Url str" image:nil whatsapp:TRUE];
+[BDGSharing shareUsingActivityController:@"Text" urlStr:@"Url str" image:nil whatsapp:TRUE];
 ```
 
 **Document Interaction Controller)**
 ```
-[[BDGShare sharedBDGShare] shareImageUsingDocumentController:image fileName:@"ImageToShareName" completion:^(UIDocumentInteractionController *documentInteractionController) {        
+[BDGSharing shareImageUsingDocumentController:image fileName:@"ImageToShareName" completion:^(UIDocumentInteractionController *documentInteractionController) {        
 }];
 ```
 

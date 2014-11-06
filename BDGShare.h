@@ -20,6 +20,9 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 
 +(BDGShare *)sharedBDGShare;
 
+//Shortcut
+#define BDGSharing [BDGShare sharedBDGShare]
+
 /*!
  *  Exclude specific activities for sharing with an activityController, by default are excluded: @[UIActivityTypeAirDrop, UIActivityTypePrint, UIActivityTypeAddToReadingList, UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
  */
@@ -39,9 +42,12 @@ typedef NS_ENUM(NSInteger, SharingResult) {
  *  Share using the activity controller. All parameters are optional
  
  *  @param whatsapp (include whatsapp as an activity)
+ *  @param popoverRect (only for iPad & iOS8, specifiy the sourceRect for the popover activitycontroller)
  */
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image;
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp;
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect;
 
 /*!
  *  Share with whatsapp directly
@@ -56,6 +62,7 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 -(void)shareFacebook:(NSString *)text urlStr:(NSString *)url image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareWeibo:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion;
 
 @end
 

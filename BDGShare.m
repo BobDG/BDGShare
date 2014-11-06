@@ -32,12 +32,12 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     self = [super init];
     if(self) {
         //Init excluded array
-        _excludeActivities = @[UIActivityTypeAirDrop, UIActivityTypePrint, UIActivityTypeAddToReadingList, UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
+        self.excludeActivities = @[UIActivityTypeAirDrop, UIActivityTypePrint, UIActivityTypeAddToReadingList, UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
     }
     return self;
 }
 
-#pragma mark Share
+#pragma mark Share using Service Type
 
 -(void)shareUsingServiceType:(NSString *)serviceType text:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion
 {
@@ -66,7 +66,8 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
         [controller setInitialText:text];
     }
     [controller setCompletionHandler:completionHandler];
-    [self presentViewController:controller];
+    UIViewController *presentingController = [self presentingVC];
+    [presentingController presentViewController:controller animated:TRUE completion:nil];
 }
 
 -(void)shareTwitter:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion
@@ -84,20 +85,9 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [self shareUsingServiceType:SLServiceTypeSinaWeibo text:text urlStr:urlStr image:image completion:completion];
 }
 
--(void)shareWhatsapp:(NSString *)text urlStr:(NSString *)urlStr
-{
-    WhatsAppActivity *activity = [[WhatsAppActivity alloc] init];
-    NSMutableArray *activities = [[NSMutableArray alloc] init];
-    if(text.length>0) {
-        [activities addObject:text];
-    }
-    if(urlStr.length>0) {
-        [activities addObject:[NSURL URLWithString:urlStr]];
-    }
-    [activity prepareWithActivityItems:activities];
-}
+#pragma mark Share using Activity Controller
 
--(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect
 {
     NSMutableArray *activities = [[NSMutableArray alloc] init];
     if(text.length>0) {
@@ -123,53 +113,46 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
         [self completeWithResult:completed ?  SharingResultSuccess : SharingResultFailed];
     }];
     
-    //Presenting
-    [self presentViewController:controller];
+    UIViewController *presentingController = [self presentingVC];
+    //iOS8 needs the popoverPresentationController
+    bool isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    if(isPad && [controller respondsToSelector:@selector(popoverPresentationController)]) {
+        controller.popoverPresentationController.sourceView = presentingController.view;
+        if(!CGRectIsEmpty(popoverRect)) {
+            controller.popoverPresentationController.sourceRect = popoverRect;
+        }
+    }
+    
+    //Present
+    [presentingController presentViewController:controller animated:TRUE completion:nil];
+}
+
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp
+{
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:whatsapp popoverRect:CGRectZero];
+}
+
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect
+{
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:popoverRect];
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image
 {
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE];
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:CGRectZero];
 }
 
-#pragma mark Completion Block
-
--(void)completeWithResult:(SharingResult)sharingResult
+-(void)shareWhatsapp:(NSString *)text urlStr:(NSString *)urlStr
 {
-    if(self.shareCompleted) {
-        self.shareCompleted(sharingResult);
+    WhatsAppActivity *activity = [[WhatsAppActivity alloc] init];
+    NSMutableArray *activities = [[NSMutableArray alloc] init];
+    if(text.length>0) {
+        [activities addObject:text];
     }
-}
-
-#pragma mark DocumentInterActionController methods
-
--(void)shareImageUsingDocumentController:(UIImage *)image fileName:(NSString *)fileName completion:(void (^)(UIDocumentInteractionController *documentInteractionController))completion
-{
-    self.documentInteractionController = nil;
-    _documentInteractionController = [[UIDocumentInteractionController alloc] init];
-    NSString *imgPath = [NSString stringWithFormat:@"%@/%@.jpg", [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"], fileName];
-    [UIImageJPEGRepresentation(image, 1.0f) writeToFile:imgPath atomically:TRUE];
-    self.documentInteractionController.URL = [NSURL fileURLWithPath:imgPath];
-    self.documentInteractionController.UTI = @"public.jpeg";
-    self.documentInteractionController.delegate = self;
-    
-    //Presenting
-    if(completion) {
-        completion(self.documentInteractionController);
+    if(urlStr.length>0) {
+        [activities addObject:[NSURL URLWithString:urlStr]];
     }
-}
-
-#pragma mark Presenting ViewControllers
-
--(void)presentViewController:(UIViewController *)controller
-{
-    if(self.presentingViewController) {
-        [self.presentingViewController presentViewController:controller animated:TRUE completion:nil];
-    }
-    else {
-        NSLog(@"BDGShare: No presenting view controller set, using keyWindow rootViewController");
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:controller animated:TRUE completion:nil];
-    }
+    [activity prepareWithActivityItems:activities];
 }
 
 #pragma mark Email
@@ -181,6 +164,11 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
 }
 
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion
+{
+    [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:isHTML attachmentData:nil attachmentFileName:nil attachmentMimeType:nil completion:completion];
+}
+
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion
 {
     self.shareCompleted = completion;
     
@@ -200,7 +188,11 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [controller setToRecipients:recipients];
     [controller setSubject:mailSubject];
     [controller setMessageBody:mailBody isHTML:isHTML];
-    [self presentViewController:controller];
+    if(attachmentData) {
+        [controller addAttachmentData:attachmentData mimeType:attachmentMimeType fileName:attachmentFileName];
+    }
+    UIViewController *presentingController = [self presentingVC];
+    [presentingController presentViewController:controller animated:TRUE completion:nil];
 }
 
 -(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
@@ -248,7 +240,8 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     controller.messageComposeDelegate = self;
     controller.body = message;
     controller.recipients = recipients;
-    [self presentViewController:controller];
+    UIViewController *presentingController = [self presentingVC];
+    [presentingController presentViewController:controller animated:TRUE completion:nil];
 }
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
@@ -264,6 +257,44 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
             [self completeWithResult:SharingResultFailed];
         }
     }];
+}
+
+#pragma mark DocumentInterActionController methods
+
+-(void)shareImageUsingDocumentController:(UIImage *)image fileName:(NSString *)fileName completion:(void (^)(UIDocumentInteractionController *documentInteractionController))completion
+{
+    self.documentInteractionController = nil;
+    _documentInteractionController = [[UIDocumentInteractionController alloc] init];
+    NSString *imgPath = [NSString stringWithFormat:@"%@/%@.jpg", [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"], fileName];
+    [UIImageJPEGRepresentation(image, 1.0f) writeToFile:imgPath atomically:TRUE];
+    self.documentInteractionController.URL = [NSURL fileURLWithPath:imgPath];
+    self.documentInteractionController.UTI = @"public.jpeg";
+    self.documentInteractionController.delegate = self;
+    
+    //Presenting
+    if(completion) {
+        completion(self.documentInteractionController);
+    }
+}
+
+#pragma mark Completion Block
+
+-(void)completeWithResult:(SharingResult)sharingResult
+{
+    if(self.shareCompleted) {
+        self.shareCompleted(sharingResult);
+    }
+}
+
+#pragma mark Presenting ViewControllers
+
+-(UIViewController *)presentingVC
+{
+    if(self.presentingViewController) {
+        return self.presentingViewController;
+    }
+    NSLog(@"BDGShare: No presenting view controller set, using keyWindow rootViewController");
+    return [[[UIApplication sharedApplication] keyWindow] rootViewController];
 }
 
 #pragma mark Singleton

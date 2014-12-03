@@ -277,6 +277,42 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     }
 }
 
+#pragma mark Address/Maps
+
+-(void)shareAddressInMaps:(NSString *)address
+{
+    if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"comgooglemaps://"]]) {
+        [self shareAddressInGoogleMaps:address];
+    }
+    else {
+        [self shareAddressInAppleMaps:address];
+    }
+}
+
+-(void)shareAddressInAppleMaps:(NSString *)address
+{
+    NSString *urlStr = [[NSString stringWithFormat:@"http://maps.apple.com/?q=%@", address] stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+}
+
+-(void)shareAddressInGoogleMaps:(NSString *)address
+{
+    NSString *urlStr = [[NSString stringWithFormat:@"comgooglemaps://?q=%@", address] stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+}
+
+#pragma mark Sharing Safari
+
+-(void)shareURLWithSafari:(NSURL *)url
+{
+    [[UIApplication sharedApplication] openURL:url];
+}
+
+-(void)shareURLStringWithSafari:(NSString *)urlStr
+{
+    [self shareURLWithSafari:[NSURL URLWithString:urlStr]];
+}
+
 #pragma mark Completion Block
 
 -(void)completeWithResult:(SharingResult)sharingResult

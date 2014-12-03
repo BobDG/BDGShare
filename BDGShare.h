@@ -64,6 +64,20 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion;
 
+/*!
+ *  Address functions, share the address with other Apps? ;)
+ */
+-(void)shareAddressInMaps:(NSString *)address;
+-(void)shareAddressInAppleMaps:(NSString *)address;
+-(void)shareAddressInGoogleMaps:(NSString *)address;
+
+/*!
+ * Safari function, share the url with Safari? ;)
+ */
+
+-(void)shareURLWithSafari:(NSURL *)url;
+-(void)shareURLStringWithSafari:(NSString *)urlStr;
+
 @end
 
 

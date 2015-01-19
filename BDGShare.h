@@ -5,6 +5,7 @@
 //  Copyright (c) 2014 GraafICT. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, SharingResult) {

@@ -109,9 +109,20 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     controller.excludedActivityTypes = self.excludeActivities;
     
     //Completion handler
-    [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
-        [self completeWithResult:completed ?  SharingResultSuccess : SharingResultFailed];
-    }];
+    if([[UIDevice currentDevice] systemVersion].floatValue >= 8.0) {
+        [controller setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
+            [self completeWithResult:completed ?  SharingResultSuccess : SharingResultFailed];
+        }];
+    }
+    else {
+        //Silence deprecation warning since we're already taking this into account
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [controller setCompletionHandler:^(NSString *activityType, BOOL completed) {
+            [self completeWithResult:completed ?  SharingResultSuccess : SharingResultFailed];
+        }];
+#pragma clang diagnostic pop
+    }    
     
     UIViewController *presentingController = [self presentingVC];
     //iOS8 needs the popoverPresentationController

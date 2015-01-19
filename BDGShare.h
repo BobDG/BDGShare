@@ -49,6 +49,7 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect;
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(UIActivityViewController *activityViewController))completion;
 
 /*!
  *  Share with whatsapp directly

@@ -87,7 +87,7 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
 
 #pragma mark Share using Activity Controller
 
--(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect completion:(void (^)(UIActivityViewController *activityViewController))completion
 {
     NSMutableArray *activities = [[NSMutableArray alloc] init];
     if(text.length>0) {
@@ -122,7 +122,13 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
             [self completeWithResult:completed ?  SharingResultSuccess : SharingResultFailed];
         }];
 #pragma clang diagnostic pop
-    }    
+    }
+    
+    //Completion handler means the dev wants to present the activitycontroller himself
+    if(completion) {
+        completion(controller);
+        return;
+    }
     
     UIViewController *presentingController = [self presentingVC];
     //iOS8 needs the popoverPresentationController
@@ -138,19 +144,29 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [presentingController presentViewController:controller animated:TRUE completion:nil];
 }
 
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(UIActivityViewController *activityViewController))completion
+{
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:CGRectZero completion:completion];
+}
+
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect
+{
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:whatsapp popoverRect:popoverRect completion:nil];
+}
+
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp
 {
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:whatsapp popoverRect:CGRectZero];
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:whatsapp popoverRect:CGRectZero completion:nil];
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect
 {
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:popoverRect];
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:popoverRect completion:nil];
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image
 {
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:CGRectZero];
+    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:CGRectZero completion:nil];
 }
 
 -(void)shareWhatsapp:(NSString *)text urlStr:(NSString *)urlStr

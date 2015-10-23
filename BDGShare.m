@@ -33,6 +33,9 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     if(self) {
         //Init excluded array
         self.excludeActivities = @[UIActivityTypeAirDrop, UIActivityTypePrint, UIActivityTypeAddToReadingList, UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
+        
+        //Statusbarstyle
+        self.statusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     return self;
 }
@@ -67,7 +70,9 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     }
     [controller setCompletionHandler:completionHandler];
     UIViewController *presentingController = [self presentingVC];
-    [presentingController presentViewController:controller animated:TRUE completion:nil];
+    [presentingController presentViewController:controller animated:TRUE completion:^{
+        [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
+    }];
 }
 
 -(void)shareTwitter:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion
@@ -141,7 +146,9 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     }
     
     //Present
-    [presentingController presentViewController:controller animated:TRUE completion:nil];
+    [presentingController presentViewController:controller animated:TRUE completion:^{
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }];
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(UIActivityViewController *activityViewController))completion
@@ -169,6 +176,16 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:CGRectZero completion:nil];
 }
 
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr
+{
+    [self shareUsingActivityController:text urlStr:urlStr image:nil];
+}
+
+-(void)shareUsingActivityController:(NSString *)text
+{
+    [self shareUsingActivityController:text urlStr:nil];
+}
+
 -(void)shareWhatsapp:(NSString *)text urlStr:(NSString *)urlStr
 {
     WhatsAppActivity *activity = [[WhatsAppActivity alloc] init];
@@ -188,6 +205,21 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
 {
     [[[UIAlertView alloc] initWithTitle:@"Error" message:NSLocalizedStringFromTable(@"BGSSAlertEmailFail", @"BGSS_Localizable", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
     [self completeWithResult:SharingResultFailed];
+}
+
+-(void)shareEmail:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion
+{
+    [self shareEmail:nil mailBody:mailBody completion:completion];
+}
+
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion
+{
+    [self shareEmail:mailSubject mailBody:mailBody recipients:nil completion:completion];
+}
+
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients completion:(void (^)(SharingResult sharingResult))completion
+{
+    [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:FALSE completion:completion];
 }
 
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion
@@ -219,7 +251,9 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
         [controller addAttachmentData:attachmentData mimeType:attachmentMimeType fileName:attachmentFileName];
     }
     UIViewController *presentingController = [self presentingVC];
-    [presentingController presentViewController:controller animated:TRUE completion:nil];
+    [presentingController presentViewController:controller animated:TRUE completion:^{
+        [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
+    }];
 }
 
 -(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
@@ -268,7 +302,9 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     controller.body = message;
     controller.recipients = recipients;
     UIViewController *presentingController = [self presentingVC];
-    [presentingController presentViewController:controller animated:TRUE completion:nil];
+    [presentingController presentViewController:controller animated:TRUE completion:^{
+        [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
+    }];
 }
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result

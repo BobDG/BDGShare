@@ -35,6 +35,11 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 @property(nonatomic,strong) UIViewController *presentingViewController;
 
 /*!
+ *
+ */
+@property(nonatomic) UIStatusBarStyle statusBarStyle;
+
+/*!
  *  Share an image using the document controller
  */
 -(void)shareImageUsingDocumentController:(UIImage *)image fileName:(NSString *)fileName completion:(void (^)(UIDocumentInteractionController *documentInteractionController))completion;
@@ -45,6 +50,9 @@ typedef NS_ENUM(NSInteger, SharingResult) {
  *  @param whatsapp (include whatsapp as an activity)
  *  @param popoverRect (only for iPad & iOS8, specifiy the sourceRect for the popover activitycontroller)
  */
+
+-(void)shareUsingActivityController:(NSString *)text;
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp;
@@ -57,12 +65,20 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 -(void)shareWhatsapp:(NSString *)text urlStr:(NSString *)urlStr;
 
 /*!
- *  Sharing functions, SMS, Twitter, Facebook, Weibo, Email
+ *  Sharing social media shortcuts: SMS, Twitter, Facebook, Weibo
  */
+
 -(void)shareSMS:(NSString *)message recipient:(NSArray *)recipients completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareTwitter:(NSString *)text urlStr:(NSString *)url image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareFacebook:(NSString *)text urlStr:(NSString *)url image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareWeibo:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion;
+
+/*!
+ * Sharing e-mail
+ */
+-(void)shareEmail:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion;
 

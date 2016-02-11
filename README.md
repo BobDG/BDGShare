@@ -3,7 +3,7 @@ BDGShare
 
 Great lightweight sharing wrapper using built-in facebook, twitter, whatsapp, email, text message, activitycontroller, documentinteractioncontroller, all with 1 line and great completion blocks!
 
-## Installation using Cocoapods
+## Installation using CocoaPods
 ```
 pod 'BDGShare'
 ```

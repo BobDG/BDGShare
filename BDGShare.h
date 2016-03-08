@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, SharingResult) {
@@ -77,10 +78,15 @@ typedef NS_ENUM(NSInteger, SharingResult) {
  * Sharing e-mail
  */
 -(void)shareEmail:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController;
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion;
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController;
 
 /*!
  *  Address functions, share the address with other Apps? ;)

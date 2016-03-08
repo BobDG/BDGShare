@@ -6,7 +6,6 @@
 //
 
 #import <Social/Social.h>
-#import <MessageUI/MessageUI.h>
 
 #import "BDGShare.h"
 #import "WhatsAppActivity.h"
@@ -212,9 +211,19 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [self shareEmail:nil mailBody:mailBody completion:completion];
 }
 
+-(void)shareEmail:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController
+{
+    [self shareEmail:nil mailBody:mailBody completion:completion mailComposeViewController:mailComposeViewController];
+}
+
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion
 {
     [self shareEmail:mailSubject mailBody:mailBody recipients:nil completion:completion];
+}
+
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController
+{
+    [self shareEmail:mailSubject mailBody:mailBody recipients:nil completion:completion mailComposeViewController:mailComposeViewController];
 }
 
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients completion:(void (^)(SharingResult sharingResult))completion
@@ -222,12 +231,23 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:FALSE completion:completion];
 }
 
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController
+{
+    [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:FALSE completion:completion mailComposeViewController:mailComposeViewController];
+}
+
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion
 {
     [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:isHTML attachmentData:nil attachmentFileName:nil attachmentMimeType:nil completion:completion];
 }
 
--(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController
+{
+    [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:isHTML attachmentData:nil attachmentFileName:nil attachmentMimeType:nil completion:completion mailComposeViewController:mailComposeViewController];
+}
+
+
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController
 {
     self.shareCompleted = completion;
     
@@ -250,10 +270,15 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     if(attachmentData) {
         [controller addAttachmentData:attachmentData mimeType:attachmentMimeType fileName:attachmentFileName];
     }
-    UIViewController *presentingController = [self presentingVC];
-    [presentingController presentViewController:controller animated:TRUE completion:^{
-        [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
-    }];
+    if(mailComposeViewController) {
+        mailComposeViewController(controller);
+    }
+    else {
+        UIViewController *presentingController = [self presentingVC];
+        [presentingController presentViewController:controller animated:TRUE completion:^{
+            [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
+        }];
+    }
 }
 
 -(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error

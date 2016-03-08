@@ -72,6 +72,7 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [presentingController presentViewController:controller animated:TRUE completion:^{
         [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
     }];
+    CFRunLoopWakeUp(CFRunLoopGetCurrent());
 }
 
 -(void)shareTwitter:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(SharingResult sharingResult))completion
@@ -148,6 +149,7 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [presentingController presentViewController:controller animated:TRUE completion:^{
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     }];
+    CFRunLoopWakeUp(CFRunLoopGetCurrent());
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(UIActivityViewController *activityViewController))completion
@@ -282,6 +284,7 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
         [presentingController presentViewController:controller animated:TRUE completion:^{
             [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
         }];
+        CFRunLoopWakeUp(CFRunLoopGetCurrent());
     }
 }
 
@@ -334,6 +337,7 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [presentingController presentViewController:controller animated:TRUE completion:^{
         [[UIApplication sharedApplication] setStatusBarStyle:self.statusBarStyle];
     }];
+    CFRunLoopWakeUp(CFRunLoopGetCurrent());
 }
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result

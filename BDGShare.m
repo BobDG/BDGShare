@@ -246,6 +246,10 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:isHTML attachmentData:nil attachmentFileName:nil attachmentMimeType:nil completion:completion mailComposeViewController:mailComposeViewController];
 }
 
+-(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion
+{
+    [self shareEmail:mailSubject mailBody:mailBody recipients:recipients isHTML:isHTML attachmentData:attachmentData attachmentFileName:attachmentFileName attachmentMimeType:attachmentMimeType completion:completion mailComposeViewController:nil];
+}
 
 -(void)shareEmail:(NSString*)mailSubject mailBody:(NSString*)mailBody recipients:(NSArray *)recipients isHTML:(BOOL)isHTML attachmentData:(NSData *)attachmentData attachmentFileName:(NSString *)attachmentFileName attachmentMimeType:(NSString *)attachmentMimeType completion:(void (^)(SharingResult sharingResult))completion mailComposeViewController:(void(^)(MFMailComposeViewController *mailComposeViewController))mailComposeViewController
 {

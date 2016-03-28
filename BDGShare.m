@@ -373,6 +373,25 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     }
 }
 
+-(void)shareFileUsingDocumentController:(NSURL *)fileURL UTI:(NSString *)UTI completion:(void (^)(UIDocumentInteractionController *documentInteractionController))completion
+{
+    self.documentInteractionController = nil;
+    _documentInteractionController = [[UIDocumentInteractionController alloc] init];
+    self.documentInteractionController.URL = fileURL;
+    self.documentInteractionController.UTI = UTI;
+    self.documentInteractionController.delegate = self;
+    
+    //Presenting
+    if(completion) {
+        completion(self.documentInteractionController);
+    }
+}
+
+-(UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
+{
+    return self.presentingViewController;
+}
+
 #pragma mark Address/Maps
 
 -(void)shareAddressInMaps:(NSString *)address

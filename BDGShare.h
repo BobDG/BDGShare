@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 /*!
  *  Share an image using the document controller
  */
+-(void)shareFileUsingDocumentController:(NSURL *)fileURL UTI:(NSString *)UTI completion:(void (^)(UIDocumentInteractionController *documentInteractionController))completion;
 -(void)shareImageUsingDocumentController:(UIImage *)image fileName:(NSString *)fileName completion:(void (^)(UIDocumentInteractionController *documentInteractionController))completion;
 
 /*!

@@ -8,9 +8,6 @@
 #import <Social/Social.h>
 
 #import "BDGShare.h"
-#import "WhatsAppActivity.h"
-
-static NSString *kWhatsAppUrlScheme = @"whatsapp://";
 
 @interface BDGShare () <UIDocumentInteractionControllerDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 {
@@ -92,7 +89,7 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
 
 #pragma mark Share using Activity Controller
 
--(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect completion:(void (^)(UIActivityViewController *activityViewController))completion
+-(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect completion:(void (^)(UIActivityViewController *activityViewController))completion
 {
     NSMutableArray *activities = [[NSMutableArray alloc] init];
     if(text.length>0) {
@@ -106,9 +103,6 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     }
     
     NSMutableArray *applicationActivities = [[NSMutableArray alloc] init];
-    if(whatsapp && [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:kWhatsAppUrlScheme]]) {
-        [applicationActivities addObject:[[WhatsAppActivity alloc] init]];
-    }
     
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activities applicationActivities:applicationActivities];
     controller.excludedActivityTypes = self.excludeActivities;
@@ -154,27 +148,17 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(UIActivityViewController *activityViewController))completion
 {
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:CGRectZero completion:completion];
-}
-
--(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect
-{
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:whatsapp popoverRect:popoverRect completion:nil];
-}
-
--(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp
-{
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:whatsapp popoverRect:CGRectZero completion:nil];
+    [self shareUsingActivityController:text urlStr:urlStr image:image popoverRect:CGRectZero completion:completion];
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect
 {
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:popoverRect completion:nil];
+    [self shareUsingActivityController:text urlStr:urlStr image:image popoverRect:popoverRect completion:nil];
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image
 {
-    [self shareUsingActivityController:text urlStr:urlStr image:image whatsapp:FALSE popoverRect:CGRectZero completion:nil];
+    [self shareUsingActivityController:text urlStr:urlStr image:image popoverRect:CGRectZero completion:nil];
 }
 
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr
@@ -187,24 +171,10 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
     [self shareUsingActivityController:text urlStr:nil];
 }
 
--(void)shareWhatsapp:(NSString *)text urlStr:(NSString *)urlStr
-{
-    WhatsAppActivity *activity = [[WhatsAppActivity alloc] init];
-    NSMutableArray *activities = [[NSMutableArray alloc] init];
-    if(text.length>0) {
-        [activities addObject:text];
-    }
-    if(urlStr.length>0) {
-        [activities addObject:[NSURL URLWithString:urlStr]];
-    }
-    [activity prepareWithActivityItems:activities];
-}
-
 #pragma mark Email
 
 -(void)mailFailed
 {
-    [[[UIAlertView alloc] initWithTitle:@"Error" message:NSLocalizedStringFromTable(@"BGSSAlertEmailFail", @"BGSS_Localizable", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
     [self completeWithResult:SharingResultFailed];
 }
 
@@ -310,7 +280,6 @@ static NSString *kWhatsAppUrlScheme = @"whatsapp://";
 
 -(void)smsFailed
 {
-    [[[UIAlertView alloc] initWithTitle:@"Error" message:NSLocalizedStringFromTable(@"BGSSAlertSMSFail", @"BGSS_Localizable", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil] show];
     [self completeWithResult:SharingResultFailed];
 }
 

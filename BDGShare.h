@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 /*!
  *  Share using the activity controller. All parameters are optional
  
- *  @param whatsapp (include whatsapp as an activity)
+ *
  *  @param popoverRect (only for iPad & iOS8, specifiy the sourceRect for the popover activitycontroller)
  */
 
@@ -57,14 +57,7 @@ typedef NS_ENUM(NSInteger, SharingResult) {
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image popoverRect:(CGRect)popoverRect;
--(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp;
--(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image whatsapp:(BOOL)whatsapp popoverRect:(CGRect)popoverRect;
 -(void)shareUsingActivityController:(NSString *)text urlStr:(NSString *)urlStr image:(UIImage *)image completion:(void (^)(UIActivityViewController *activityViewController))completion;
-
-/*!
- *  Share with whatsapp directly
- */
--(void)shareWhatsapp:(NSString *)text urlStr:(NSString *)urlStr;
 
 /*!
  *  Sharing social media shortcuts: SMS, Twitter, Facebook, Weibo

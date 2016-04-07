@@ -1,5 +1,0 @@
-/* Localized versions of Info.plist keys */
-
-"OK"                        =           "OK";
-"BGSSAlertSMSFail"          =           "Aanmaken sms-bericht mislukt, kan dit device wel sms-berichten versturen?";
-"BGSSAlertEmailFail"        =           "Aanmaken email-bericht mislukt, zijn er wel e-mail accounts aangemaakt op dit device?";
